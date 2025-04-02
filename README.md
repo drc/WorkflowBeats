@@ -11,3 +11,4 @@ A week to learn anything I want? I decided to take on a project to explore vario
 [https://docs.astro.build/en/guides/integrations-guide/cloudflare/](https://docs.astro.build/en/guides/integrations-guide/cloudflare/)
 [https://www.servicenow.com/docs/bundle/xanadu-platform-security/page/administer/security/concept/c_OAuthAuthorizationCodeFlow.html](https://www.servicenow.com/docs/bundle/xanadu-platform-security/page/administer/security/concept/c_OAuthAuthorizationCodeFlow.html)
 [https://dev.to/askrodney/astro-cookies-api-cookies-on-http-requests-4fn5](https://dev.to/askrodney/astro-cookies-api-cookies-on-http-requests-4fn5)
+[https://blog.ohansemmanuel.com/working-with-astros-middleware/](https://blog.ohansemmanuel.com/working-with-astros-middleware/)
