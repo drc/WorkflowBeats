@@ -3,5 +3,32 @@ type Runtime = import("@astrojs/cloudflare").Runtime<Env>;
 declare namespace App {
 	interface Locals extends Runtime {
 		access_token: string;
+		refresh_token: string;
 	}
+}
+
+interface ProxyUserResponse {
+	user_name: string;
+	user_display_name: string;
+	user_initials: string;
+	user_avatar: string;
+	user_sys_id: string;
+}
+
+interface TokenResponse {
+	access_token: string;
+	refresh_token: string;
+	scope: string;
+	token_type: string;
+	expires_in: number;
+	expiry_date: number;
+}
+
+interface UserResponse {
+	result: {
+		user_name: string;
+		user_display_name: string;
+		user_initials: string;
+		user_avatar: string;
+	};
 }
