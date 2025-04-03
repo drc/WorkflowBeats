@@ -1,36 +1,37 @@
 import { defineMiddleware } from "astro:middleware";
-import type { TokenResponse } from "./pages/api/oauth_redirect";
+import { POST as refresh_token } from "@/pages/api/refresh_token";
 
+// skip middleware for these routes
 const PUBLIC_ROUTES = ["/", "/login", "/api/oauth_redirect", "/api/refresh_token"];
 
 export const onRequest = defineMiddleware(async (context, next) => {
-    if (!context.cookies.has("access_token") && !PUBLIC_ROUTES.includes(context.url.pathname)) {
-        return context.redirect("/login", 302);
+    const has_access_token = context.cookies.has("access_token");
+    const has_refresh_token = context.cookies.has("refresh_token");
+    const valid_user_session = has_access_token && has_refresh_token;
+    // not a public route, so we need to check for access tokens
+    if (!valid_user_session) {
+        if (!PUBLIC_ROUTES.includes(context.url.pathname)) {
+            return context.redirect("/login", 302);
+        }
+    }
+    // one of the parts of the session is missing
+    if (!has_access_token && has_refresh_token) {
+        const refresh_response = await refresh_token(context);
+
+        // unable to refresh the access token, redirect to login
+        if (refresh_response.status !== 201) {
+            return context.redirect("/login", 302);
+        }
+
+        return next();
     }
 
-    if (context.cookies.has("access_token")) {
-        let auth: TokenResponse = context.cookies.get("access_token")?.json();
-        if (auth.expiry_date < Date.now()) {
-            const refresh_response = await fetch(`https://${context.locals.runtime.env.SERVICENOW_INSTANCE}/oauth_token.do`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-                body: new URLSearchParams({
-                    grant_type: "refresh_token",
-                    refresh_token: auth.refresh_token,
-                    client_id: context.locals.runtime.env.SERVICENOW_CLIENT_ID,
-                    client_secret: context.locals.runtime.env.SERVICENOW_CLIENT_SECRET,
-                }),
-            });
-            auth = await refresh_response.json();
-            context.cookies.set("access_token", auth, { path: "/", maxAge: 1800 });
-        }
-        context.locals.access_token = auth?.access_token;
-        if (context.url.pathname === "/login") {
-            return context.redirect("/dashboard", 302);
-        }
+    if (valid_user_session && context.url.pathname === "/login") {
+        return context.redirect("/dashboard", 302);
     }
+    // if we're here, we have an access token
+    context.locals.access_token = context.cookies.get("access_token")?.value ?? "";
+    context.locals.refresh_token = context.cookies.get("refresh_token")?.value ?? "";
 
     return next();
 });

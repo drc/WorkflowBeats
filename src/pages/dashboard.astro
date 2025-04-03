@@ -1,8 +1,13 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import Image from "astro/components/Image.astro";
 ---
 
 <Layout title="Dashboard">
 	Dashboard
-    <img src="/api/user/image" alt="Avatar" />
+    <Image
+        src="/api/user/image.jpeg"
+        alt="User Image"
+        width={100}
+        height={100}></Image>
 </Layout>

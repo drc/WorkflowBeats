@@ -6,6 +6,7 @@ interface UserResponse {
         user_display_name: string;
         user_initials: string;
         user_avatar: string;
+        user_sys_id: string;
     };
 }
 
@@ -19,6 +20,9 @@ export const GET: APIRoute = async ({ locals }) => {
             },
         },
     );
+    if (!response.ok) {
+        return new Response("Unauthorized", { status: 401 });
+    }
     const { result: data }: UserResponse = await response.json();
 
     return new Response(JSON.stringify(data), { status: 200, headers: { "Content-Type": "application/json" } });
