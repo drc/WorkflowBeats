@@ -1,13 +1,147 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Image from "astro/components/Image.astro";
+import { GET as GET_me } from "@/pages/api/user/me";
+
+const user_info = await GET_me(Astro);
+const user_data: ProxyUserResponse = await user_info.json();
 ---
 
 <Layout title="Dashboard">
-	Dashboard
-    <Image
-        src="/api/user/image.jpeg"
-        alt="User Image"
-        width={100}
-        height={100}></Image>
+    <div class="dashboard">
+        <div class="user-info">
+            <h1>WorkflowBeats Song Submission</h1>
+            <Image
+                src="/api/user/image.jpeg"
+                alt={user_data.user_display_name}
+                width={100}
+                height={100}></Image>
+            <p>{user_data.user_display_name}</p>
+        </div>
+
+        <div class="song-search">
+            <h2>Search for Songs</h2>
+            <input type="text" id="song-search-input" placeholder="Search for a song..." />
+            <button id="search-button">Search</button>
+        </div>
+
+        <div class="selected-songs">
+            <h2>You Picked</h2>
+            <ul id="song-list">
+                <!-- Songs selected by the user will be dynamically added here -->
+            </ul>
+        </div>
+
+        <div class="voting-section">
+            <h2>Vote on Songs</h2>
+            <ul id="voting-list">
+                <!-- Songs available for voting will be dynamically added here -->
+            </ul>
+        </div>
+    </div>
 </Layout>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .dashboard {
+        padding: 2rem;
+        max-width: 800px;
+        margin: 2rem auto;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    .user-info {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .user-info h1 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .song-search {
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .song-search input {
+        padding: 0.5rem;
+        font-size: 1rem;
+        width: 60%;
+        margin-right: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .song-search button {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        background-color: #4a90e2;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .song-search button:hover {
+        background-color: #357abd;
+    }
+
+    .selected-songs, .voting-section {
+        margin-bottom: 2rem;
+    }
+
+    .selected-songs ul, .voting-section ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .selected-songs li, .voting-section li {
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        margin-bottom: 0.5rem;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .voting-section li button {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.9rem;
+        background-color: #4a90e2;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .voting-section li button:hover {
+        background-color: #357abd;
+    }
+</style>
