@@ -11,7 +11,7 @@ A week to learn anything I want? I decided to take on a project to explore vario
 End of day, I need to handle for
 
 - [ ] Checking token expiration and refreshing for a new one when it expires, they don't need to reauthenticate, just need to refresh the current token.
-- [ ] Handle post login, what do we do on the dashboard? 
+- [ ] Handle post login, what do we do on the dashboard?
 - [ ] think about spotify login, search box, what playlist to add to
 - [ ] logout?
 
