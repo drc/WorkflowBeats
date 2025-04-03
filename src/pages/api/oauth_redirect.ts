@@ -1,11 +1,12 @@
 import type { APIRoute } from "astro";
 
-interface TokenResponse {
+export interface TokenResponse {
     access_token: string;
     refresh_token: string;
     scope: string;
     token_type: string;
     expires_in: number;
+    expiry_date: number;
 }
 
 export const GET: APIRoute = async ({ cookies, locals, request, redirect }) => {
@@ -28,6 +29,8 @@ export const GET: APIRoute = async ({ cookies, locals, request, redirect }) => {
         },
     });
     const token_data: TokenResponse = await token_response.json();
-    cookies.set("access_token", token_data, {path: "/"});
+    // compute expiry date when expires_in seconds from now
+    token_data.expiry_date = Date.now() + token_data.expires_in * 1000;
+    cookies.set("access_token", token_data, { path: "/", maxAge: 1800 });
     return redirect("/dashboard", 302);
 }

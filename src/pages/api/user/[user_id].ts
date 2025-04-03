@@ -9,9 +9,11 @@ interface UserResponse {
     };
 }
 
-export const GET: APIRoute = async ({ locals }) => {
+export const GET: APIRoute = async ({ params, locals }) => {
+    const user_id = params.user_id;
+
     const response = await fetch(
-        `https://${locals.runtime.env.SERVICENOW_INSTANCE}/api/now/ui/user/current_user`,
+        `https://${locals.runtime.env.SERVICENOW_INSTANCE}/api/now/ui/user/${user_id}`,
         {
             method: "GET",
             headers: {

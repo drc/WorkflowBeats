@@ -1,15 +1,8 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-let cookie = "";
-if (Astro.cookies.has("access_token")) {
-	const cookies = Astro.cookies.get("access_token");
-	const payload = cookies?.json();
-	cookie = payload.access_token;
-}
-
 ---
 
 <Layout title="Dashboard">
 	Dashboard
-    <img src="/api/user/me" alt="Avatar" />
+    <img src="/api/user/image" alt="Avatar" />
 </Layout>
