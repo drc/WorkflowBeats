@@ -27,7 +27,7 @@ export const GET: APIRoute = async (context) => {
 
     const token_data: TokenResponse = await token_response.json();
     cookies.set("connected", "true", { path: "/", maxAge: 8640000 });
-    cookies.set("access_token", token_data.access_token, { path: "/", maxAge: token_data.expires_in });
+    cookies.set("access_token", token_data.access_token, { path: "/", maxAge: token_data.expires_in, secure: true, httpOnly: true, sameSite: "strict" });
     cookies.set("refresh_token", token_data.refresh_token, { path: "/", maxAge: 8640000, secure: true, httpOnly: true, sameSite: "strict" });
     return redirect("/dashboard", 302);
 }

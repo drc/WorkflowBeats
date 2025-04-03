@@ -25,10 +25,5 @@ interface TokenResponse {
 }
 
 interface UserResponse {
-	result: {
-		user_name: string;
-		user_display_name: string;
-		user_initials: string;
-		user_avatar: string;
-	};
+	result: ProxyUserResponse;
 }
