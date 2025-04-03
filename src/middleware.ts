@@ -12,7 +12,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     // not a public route, so we need to check for access tokens
     if (!valid_user_session) {
         if (!PUBLIC_ROUTES.includes(context.url.pathname)) {
-            return context.redirect("/login", 302);
+            return context.redirect("/", 302);
         }
     }
     // one of the parts of the session is missing
@@ -21,18 +21,18 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
         // unable to refresh the access token, redirect to login
         if (refresh_response.status !== 201) {
-            return context.redirect("/login", 302);
+            return context.redirect("/", 302);
         }
         has_access_token = context.cookies.has("access_token");
         valid_user_session = has_access_token && has_refresh_token;
         
-        if (valid_user_session && context.url.pathname === "/login") {
+        if (valid_user_session && context.url.pathname === "/") {
             return context.redirect("/dashboard", 302);
         }
         return next();
     }
 
-    if (valid_user_session && context.url.pathname === "/login") {
+    if (valid_user_session && context.url.pathname === "/") {
         return context.redirect("/dashboard", 302);
     }
     // if we're here, we have an access token

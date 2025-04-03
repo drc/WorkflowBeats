@@ -1,7 +1,102 @@
 ---
-import Layout from '@/layouts/Layout.astro';
+import Layout from "@/layouts/Layout.astro";
+const { env } = Astro.locals.runtime;
+const login_url = new URL(`https://${env.SERVICENOW_INSTANCE}/oauth_auth.do`);
+login_url.searchParams.set("response_type", "code");
+login_url.searchParams.set("redirect_uri", env.SERVICENOW_REDIRECT_URI);
+login_url.searchParams.set("client_id", env.SERVICENOW_CLIENT_ID);
 ---
 
 <Layout title="Welcome">
-	
+    <!-- site with a large hero in the middle with the app title WorkflowBeats -->
+    <div class="hero">
+        <div class="glass-card">
+            <h1>WorkflowBeats</h1>
+            <p>Boost your productivity with the perfect playlist.</p>
+            <a href={login_url.toString()} class="cta">Login With ServiceNow</a>
+        </div>
+    </div>
 </Layout>
+
+<style>
+    .hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        height: 100vh;
+        background: linear-gradient(135deg, #4a90e2, #9013fe);
+        color: white;
+        font-family: "Arial", sans-serif;
+    }
+
+    .hero h1 {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .hero p {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .hero .cta {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        font-size: 1.25rem;
+        color: #4a90e2;
+        background: white;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        transition:
+            background 0.3s,
+            color 0.3s;
+    }
+
+    .hero .cta:hover {
+        background: #4a90e2;
+        color: white;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        text-align: center;
+    }
+
+    .glass-card h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .glass-card p {
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .glass-card .cta {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        font-size: 1.25rem;
+        color: #4a90e2;
+        background: white;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        transition:
+            background 0.3s,
+            color 0.3s;
+    }
+
+    .glass-card .cta:hover {
+        background: #4a90e2;
+        color: white;
+    }
+</style>
