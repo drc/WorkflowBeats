@@ -3,9 +3,25 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="https://fav.farm/🎵" />
 		<meta name="generator" content={Astro.generator} />
-		<title>{Astro.props.title} | Workflow Beats</title>
+		<title>{ Astro.props.title ? `${Astro.props.title} | WorkflowBeats` : "WorkflowBeats" }Workflow Beats</title>
+
+		<!-- Open Graph Meta Tags -->
+		<meta property="og:title" content={Astro.props.title || "Workflow Beats"} />
+		<meta property="og:description" content="Boost your productivity with the perfect playlist." />
+		<meta property="og:image" content="/og-image.png" />
+		<meta property="og:url" content="https://workflowbeats.danielcigrang.workers.dev" />
+		<meta property="og:type" content="website" />
+
+		<!-- Twitter Card Meta Tags -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={Astro.props.title || "Workflow Beats"} />
+		<meta name="twitter:description" content="Boost your productivity with the perfect playlist." />
+		<meta name="twitter:image" content="/og-image.png" />
+
+		<!-- Additional Meta Tags -->
+		<meta name="theme-color" content="#4a90e2" />
 	</head>
 	<body>
 		<slot />
