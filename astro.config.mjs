@@ -10,5 +10,8 @@ export default defineConfig({
     platformProxy: {
       enabled: true
     }
-  })
+  }),
+  server: {
+    allowedHosts: ['.ngrok-free.app'],
+  }
 });
