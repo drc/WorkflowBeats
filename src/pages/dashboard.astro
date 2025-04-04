@@ -2,41 +2,37 @@
 import Layout from "@/layouts/Layout.astro";
 import Image from "astro/components/Image.astro";
 import { GET as GET_me } from "@/pages/api/user/me";
+import Search from "@/components/Search.svelte";
 
 const user_info = await GET_me(Astro);
 const user_data: ProxyUserResponse = await user_info.json();
+
 ---
 
 <Layout title="Dashboard">
     <div class="dashboard">
         <div class="user-info">
             <h1>WorkflowBeats Song Submission</h1>
-            <Image
-                src="/api/user/image.jpeg"
-                alt={user_data.user_display_name}
-                width={100}
-                height={100}></Image>
+            <Image src="/api/user/image.jpeg" alt={user_data.user_display_name} width={100} height={100} loading="eager" />
             <p>{user_data.user_display_name}</p>
         </div>
 
+        
+
         <div class="song-search">
             <h2>Search for Songs</h2>
-            <input type="text" id="song-search-input" placeholder="Search for a song..." />
-            <button id="search-button">Search</button>
+            <Search client:load/>
+            <button id="search-button">Add</button>
         </div>
 
         <div class="selected-songs">
             <h2>You Picked</h2>
-            <ul id="song-list">
-                <!-- Songs selected by the user will be dynamically added here -->
-            </ul>
+            <ul id="song-list"></ul>
         </div>
 
         <div class="voting-section">
             <h2>Vote on Songs</h2>
-            <ul id="voting-list">
-                <!-- Songs available for voting will be dynamically added here -->
-            </ul>
+            <ul id="voting-list"></ul>
         </div>
     </div>
 </Layout>
@@ -112,16 +108,19 @@ const user_data: ProxyUserResponse = await user_info.json();
         background-color: #357abd;
     }
 
-    .selected-songs, .voting-section {
+    .selected-songs,
+    .voting-section {
         margin-bottom: 2rem;
     }
 
-    .selected-songs ul, .voting-section ul {
+    .selected-songs ul,
+    .voting-section ul {
         list-style: none;
         padding: 0;
     }
 
-    .selected-songs li, .voting-section li {
+    .selected-songs li,
+    .voting-section li {
         padding: 0.5rem;
         border: 1px solid #ddd;
         margin-bottom: 0.5rem;

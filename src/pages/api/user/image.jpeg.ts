@@ -1,8 +1,9 @@
 import type { APIRoute } from "astro";
 import { GET as GET_me } from "@/pages/api/user/me";
-import { constants as http } from "node:http2";
 
 const ONE_DAY = 86400; // 1 day in seconds
+
+// TODO: refactor like the other endpoints / error handling
 
 export const GET: APIRoute = async (context) => {
     const { locals } = context;
@@ -16,7 +17,7 @@ export const GET: APIRoute = async (context) => {
 
     // Return the cached image if it exists
     if (cache) {
-        return new Response(cache, { status: http.HTTP_STATUS_OK, headers: { "Content-Type": "image/jpeg;charset=utf-8" } });
+        return new Response(cache, { status: 200, headers: { "Content-Type": "image/jpeg;charset=utf-8" } });
     }
 
     // Fetch the image from ServiceNow
@@ -29,5 +30,5 @@ export const GET: APIRoute = async (context) => {
     const avatar_data = await avatar_response.blob();
     const image_buffer = await avatar_data.arrayBuffer();
     await context.locals.runtime.env.workflowbeats.put(`${data.user_sys_id}_avatar`, image_buffer, { expirationTtl: ONE_DAY });
-    return new Response(image_buffer, { status: http.HTTP_STATUS_OK, headers: { "Content-Type": "image/jpeg;charset=utf-8" } });
+    return new Response(image_buffer, { status: 200, headers: { "Content-Type": "image/jpeg;charset=utf-8" } });
 };

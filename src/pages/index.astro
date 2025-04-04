@@ -1,19 +1,13 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-const { env } = Astro.locals.runtime;
-const login_url = new URL(`https://${env.SERVICENOW_INSTANCE}/oauth_auth.do`);
-login_url.searchParams.set("response_type", "code");
-login_url.searchParams.set("redirect_uri", env.SERVICENOW_REDIRECT_URI);
-login_url.searchParams.set("client_id", env.SERVICENOW_CLIENT_ID);
 ---
 
 <Layout title="Welcome">
-    <!-- site with a large hero in the middle with the app title WorkflowBeats -->
     <div class="hero">
         <div class="glass-card">
             <h1>WorkflowBeats</h1>
             <p>Boost your productivity with the perfect playlist.</p>
-            <a href={login_url.toString()} class="cta">Login With ServiceNow</a>
+            <a href="/login" class="cta">Login With ServiceNow</a>
         </div>
     </div>
 </Layout>

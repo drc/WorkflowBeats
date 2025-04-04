@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { constants as http } from "node:http2";
 
 export const GET: APIRoute = async ({ locals }) => {
     try {
@@ -17,9 +16,9 @@ export const GET: APIRoute = async ({ locals }) => {
         }
         const { result: data }: UserResponse = await response.json();
 
-        return new Response(JSON.stringify(data), { status: http.HTTP_STATUS_OK, headers: { "Content-Type": "application/json" } });
+        return new Response(JSON.stringify(data), { status: 200, headers: { "Content-Type": "application/json" } });
     } catch (error) {
         console.debug(error);
-        return new Response(`Internal Server Error: ${error}`, { status: http.HTTP_STATUS_INTERNAL_SERVER_ERROR });
+        return new Response(`Internal Server Error: ${error}`, { status: 401 });
     }
 };

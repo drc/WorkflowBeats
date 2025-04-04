@@ -2,11 +2,13 @@ import type { APIRoute } from "astro";
 
 export const GET: APIRoute = async (context) => {
     const { cookies, locals, request, redirect } = context;
-    const { searchParams } = new URL(request.url);
-    const code = searchParams.get("code");
+    const code = new URL(request.url).searchParams?.get("code");
+    const state = new URL(request.url).searchParams?.get("state");
 
-    if (!code) {
-        return redirect("/", 302);
+    const storedState = cookies.get("state")?.value;
+
+    if (!code || state !== storedState) {
+        return redirect("/?error=Server+Error", 302);
     }
 
     const { runtime: { env } } = locals;
@@ -25,6 +27,7 @@ export const GET: APIRoute = async (context) => {
         },
     });
 
+    // TODO: Make a user session saved in database and not store these in cookies
     const token_data: TokenResponse = await token_response.json();
     cookies.set("connected", "true", { path: "/", maxAge: 8640000 });
     cookies.set("access_token", token_data.access_token, { path: "/", maxAge: token_data.expires_in, secure: true, httpOnly: true });

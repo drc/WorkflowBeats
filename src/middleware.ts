@@ -2,13 +2,16 @@ import { defineMiddleware } from "astro:middleware";
 import { POST as refresh_token } from "@/pages/api/refresh_token";
 
 // skip middleware for these routes
-const PUBLIC_ROUTES = ["/", "/login", "/api/oauth_redirect", "/api/refresh_token"];
+const PUBLIC_ROUTES = ["/", "/login", "/api/oauth_redirect", "/api/refresh_token", "/api/spotify/search"];
+
+// TODO: Middleware needs to handle sessions rather than tokens in cookies
+// Maybe use D1 to store sessions in the database. should i sequence the astro middleware, one auth middleware and one session middleware?
 
 export const onRequest = defineMiddleware(async (context, next) => {
     let has_access_token = context.cookies.has("access_token");
     const has_refresh_token = context.cookies.has("refresh_token");
     let valid_user_session = has_access_token && has_refresh_token;
-    console.log({ valid_user_session })
+    // console.log({ valid_user_session })
     // not a public route, so we need to check for access tokens
     if (!valid_user_session) {
         if (!PUBLIC_ROUTES.includes(context.url.pathname)) {

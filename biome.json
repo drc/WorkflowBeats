@@ -7,9 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": [
-			"worker-configuration.d.ts"
-		]
+		"ignore": ["worker-configuration.d.ts"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -26,7 +24,8 @@
 	},
 	"javascript": {
 		"formatter": {
-			"quoteStyle": "double"
+			"quoteStyle": "double",
+			"semicolons": "always"
 		}
 	}
 }
