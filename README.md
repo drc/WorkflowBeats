@@ -29,6 +29,44 @@ I'm excited to work on this more on the weekend to get some things done before d
 
 I'm in a good place getting the user session created and saving a user account. I need to update the middleware first to handle how a session is validated and extended. This is a [great resource](https://github.com/ksjitendra18/astro-js-auth-oauth-passwordless-credentials/tree/main/src/pages) for learning how to do this.
 
+Ran out of `ngrok` requests so I had to move to cloudflare tunnels, I created some config file locally to track my work. this command runs the tunnel:
+
+```cloudflared tunnel --config ./cloudflare-config.yml run development```
+
+paired with this running the dev server:
+
+```pnpm run dev```
+
+the database admin interface, uses a dev.drizzle.config.ts file rather than the d1-http default config:
+
+```pnpm run db:studio```
+
+#### Database
+
+Generate the sql from schema.ts file:
+
+`pnpm run db:generate`
+
+For generating and updating the local database:
+
+`pnpm run db:migrate`
+
+To generate and update the remote database:
+
+`pnpm exec drizzle-kit push`
+
+Generate empty migration files to seed data
+
+`drizzle-kit generate --custom --name=<file_name>`
+
+```sql
+-- ./drizzle/0001_seed-users.sql
+
+INSERT INTO "users" ("name") VALUES('Dan');
+INSERT INTO "users" ("name") VALUES('Andrew');
+INSERT INTO "users" ("name") VALUES('Dandrew');
+```
+
 ## Resources
 
 - [https://docs.astro.build/en/guides/integrations-guide/cloudflare/](https://docs.astro.build/en/guides/integrations-guide/cloudflare/)
