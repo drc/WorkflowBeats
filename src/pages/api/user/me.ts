@@ -15,7 +15,6 @@ export const GET: APIRoute = async ({ locals }) => {
 			throw new Error("Unauthorized");
 		}
 		const { result: data }: UserResponse = await response.json();
-		console.log(data);
 
 		return new Response(JSON.stringify(data), {
 			status: 200,

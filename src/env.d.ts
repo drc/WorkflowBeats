@@ -4,10 +4,15 @@ declare namespace App {
 	interface Locals extends Runtime {
 		access_token: string;
 		refresh_token: string;
+		user_data: {
+			id: number;
+			name: string | null;
+			sys_id: string;
+		};
 	}
 }
 
-interface ProxyUserResponse {
+interface UserData {
 	user_name: string;
 	user_display_name: string;
 	user_initials: string;
@@ -25,7 +30,7 @@ interface TokenResponse {
 }
 
 interface UserResponse {
-	result: ProxyUserResponse;
+	result: UserData;
 }
 
 interface SpotifyAuthResponse {

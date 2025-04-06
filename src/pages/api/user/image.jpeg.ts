@@ -11,7 +11,7 @@ export const GET: APIRoute = async (context) => {
     if (me_response.status !== 200) {
         return new Response("Unauthorized", { status: 401 });
     }
-    const data: ProxyUserResponse = await me_response.json();
+    const data: UserData = await me_response.json();
 
     const cache = await context.locals.runtime.env.workflowbeats.get(`${data.user_sys_id}_avatar`, { type: "arrayBuffer", cacheTtl: ONE_DAY });
 

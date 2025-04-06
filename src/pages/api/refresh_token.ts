@@ -7,10 +7,8 @@ export const GET: APIRoute = async (context) => {
 export const POST: APIRoute = async (context) => {
 	try {
 		console.log("Token expired, refreshing...");
-		if (!context.cookies.has("refresh_token")) {
-			throw new Error("Unauthorized");
-		}
-		const refresh_token = context.cookies.get("refresh_token")?.value ?? "";
+
+		const refresh_token = context.locals.refresh_token;
 		const refresh_response = await fetch(
 			`https://${context.locals.runtime.env.SERVICENOW_INSTANCE}/oauth_token.do`,
 			{
@@ -30,23 +28,9 @@ export const POST: APIRoute = async (context) => {
 			throw new Error("Bad Request - Invalid refresh token");
 		}
 		const auth: TokenResponse = await refresh_response.json();
-		context.cookies.set("access_token", auth.access_token, {
-			path: "/",
-			maxAge: auth.expires_in,
-			secure: true,
-			httpOnly: true,
-			sameSite: "strict",
-		});
-		context.cookies.set("refresh_token", auth.refresh_token, {
-			path: "/",
-			maxAge: 8640000,
-			secure: true,
-			httpOnly: true,
-			sameSite: "strict",
-		});
 
-		return new Response(null, {
-			status: 201,
+		return new Response(JSON.stringify(auth), {
+			status: 200,
 			headers: { "Content-Type": "application/json" },
 		});
 	} catch (error) {

@@ -1,27 +1,31 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Image from "astro/components/Image.astro";
-import { GET as GET_me } from "@/pages/api/user/me";
 import Search from "@/components/Search.svelte";
 
-const user_info = await GET_me(Astro);
-const user_data: ProxyUserResponse = await user_info.json();
+const session = Astro.cookies.get("session")?.value;
 
+if (!session) {
+    return Astro.redirect("/login?redirect=/dashboard");
+}
+
+const user_data = Astro.locals.user_data;
+if (!user_data) {
+    return Astro.redirect("/login?redirect=/dashboard");
+}
 ---
 
 <Layout title="Dashboard">
     <div class="dashboard">
         <div class="user-info">
             <h1>WorkflowBeats Song Submission</h1>
-            <Image src="/api/user/image.jpeg" alt={user_data.user_display_name} width={100} height={100} loading="eager" />
-            <p>{user_data.user_display_name}</p>
+            <Image src="/api/user/image.jpeg" alt={user_data.name} width={100} height={100} loading="eager" />
+            <p>{user_data.name}</p>
         </div>
-
-        
 
         <div class="song-search">
             <h2>Search for Songs</h2>
-            <Search client:load/>
+            <Search client:load />
             <button id="search-button">Add</button>
         </div>
 

@@ -1,7 +1,6 @@
 import type { APIRoute } from "astro";
-import { GET as getUser } from "@/pages/api/user/me";
 import { drizzle } from "drizzle-orm/d1";
-import { sessions, users } from "@/db/schema";
+import { connections, sessions, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 export const GET: APIRoute = async (context) => {
@@ -15,6 +14,8 @@ export const GET: APIRoute = async (context) => {
 		return redirect("/?error=Server+Error", 302);
 	}
 
+	cookies.delete("state");
+
 	const {
 		runtime: { env },
 	} = locals;
@@ -24,7 +25,10 @@ export const GET: APIRoute = async (context) => {
 	);
 	token_url.searchParams.set("grant_type", "authorization_code");
 	token_url.searchParams.set("code", code);
-	token_url.searchParams.set("redirect_uri", env.SERVICENOW_REDIRECT_URI);
+	token_url.searchParams.set(
+		"redirect_uri",
+		`https://${context.url.host}/api/oauth_redirect`,
+	);
 	token_url.searchParams.set("client_id", env.SERVICENOW_CLIENT_ID);
 	token_url.searchParams.set("client_secret", env.SERVICENOW_CLIENT_SECRET);
 
@@ -37,35 +41,53 @@ export const GET: APIRoute = async (context) => {
 
 	// TODO: Make a user session saved in database and not store these in cookies
 	const token_data: TokenResponse = await token_response.json();
-	console.log(token_data);
-	context.locals.access_token = token_data.access_token;
-	context.locals.refresh_token = token_data.refresh_token;
-	const user_response = await getUser(context);
-	const user_data: ProxyUserResponse = await user_response.json();
-	console.log(user_data);
+	console.log("Retrieved token data");
+	const current_user_response = await fetch(
+		`https://${locals.runtime.env.SERVICENOW_INSTANCE}/api/now/ui/user/current_user`,
+		{
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${token_data.access_token}`,
+			},
+		},
+	);
+	if (!current_user_response.ok) {
+		throw new Error("Unauthorized");
+	}
+	const { result: user_data }: UserResponse =
+		await current_user_response.json();
+	console.log("Retrieved user data");
 	const db = drizzle(context.locals.runtime.env.DB);
 	let userDBData = await db
 		.select()
 		.from(users)
 		.where(eq(users.sys_id, user_data.user_sys_id))
 		.limit(1);
-	console.log({ userDBData });
 	if (userDBData.length === 0) {
 		userDBData = await db
 			.insert(users)
 			.values({
-				name: user_data.user_name,
+				name: user_data.user_display_name,
 				sys_id: user_data.user_sys_id,
 			})
 			.returning();
-		console.log({ userDBData });
 	}
+	console.log("User data saved to database");
+	await db.insert(connections).values({
+		user_id: userDBData[0]?.id,
+		access_token: token_data.access_token,
+		refresh_token: token_data.refresh_token,
+		expires_in: token_data.expires_in,
+		provider: "servicenow",
+	});
+	console.log("Connection data saved to database");
 	const [session] = await db
 		.insert(sessions)
 		.values({
 			user_id: userDBData[0]?.id ?? 1,
 		})
 		.returning();
+	console.log("Session data saved to database");
 	cookies.set("session", session.session_token as string, {
 		path: "/",
 		maxAge: session.expires as number,
