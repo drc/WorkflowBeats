@@ -19,10 +19,21 @@ End of day, I need to handle for
 
 I successfully implemented logins yesterday and set up token storage for automatic refreshing. While the current method of storing refresh tokens isn't secure, it's something I'll revisit later to ensure safe storage. Currently, ServiceNow access tokens expire after 5 minutes, but the site automatically refreshes them. The refresh tokens remain valid for 30 days, so I'll need to consider how to handle this securely in the future. For now, I'll shift my focus to designing the front page UI, dashboard UI, and login page/buttons.
 
+### 2025-04-04: Day 3
+
+I was able to complete the Spotify connection and use a Svelte component to search and return results. I will have to create methods to accept the selected song, apply it to the database. I also want to send it to my printer and have it print some songs for the demo.
+
+### 2025-04-05: Day 3.25
+
+I'm excited to work on this more on the weekend to get some things done before demo on Tuesday. I am setting up a Cloudflare D1 database to store information regarding new users and sessions, and moving the auth tokens and storage to the database, validating only the session ID.
+
+I'm in a good place getting the user session created and saving a user account. I need to update the middleware first to handle how a session is validated and extended. This is a [great resource](https://github.com/ksjitendra18/astro-js-auth-oauth-passwordless-credentials/tree/main/src/pages) for learning how to do this.
+
 ## Resources
 
-[https://docs.astro.build/en/guides/integrations-guide/cloudflare/](https://docs.astro.build/en/guides/integrations-guide/cloudflare/)
-[https://www.servicenow.com/docs/bundle/xanadu-platform-security/page/administer/security/concept/c_OAuthAuthorizationCodeFlow.html](https://www.servicenow.com/docs/bundle/xanadu-platform-security/page/administer/security/concept/c_OAuthAuthorizationCodeFlow.html)
-[https://dev.to/askrodney/astro-cookies-api-cookies-on-http-requests-4fn5](https://dev.to/askrodney/astro-cookies-api-cookies-on-http-requests-4fn5)
-[https://blog.ohansemmanuel.com/working-with-astros-middleware/](https://blog.ohansemmanuel.com/working-with-astros-middleware/)
-[https://github.com/understanding-astro/astro-middleware-examples/blob/master/jwt-auth/src/pages/protected.astro](https://github.com/understanding-astro/astro-middleware-examples/blob/master/jwt-auth/src/pages/protected.astro)
+- [https://docs.astro.build/en/guides/integrations-guide/cloudflare/](https://docs.astro.build/en/guides/integrations-guide/cloudflare/)
+- [https://www.servicenow.com/docs/bundle/xanadu-platform-security/page/administer/security/concept/c_OAuthAuthorizationCodeFlow.html](https://www.servicenow.com/docs/bundle/xanadu-platform-security/page/administer/security/concept/c_OAuthAuthorizationCodeFlow.html)
+- [https://dev.to/askrodney/astro-cookies-api-cookies-on-http-requests-4fn5](https://dev.to/askrodney/astro-cookies-api-cookies-on-http-requests-4fn5)
+- [https://blog.ohansemmanuel.com/working-with-astros-middleware/](https://blog.ohansemmanuel.com/working-with-astros-middleware/)
+- [https://github.com/understanding-astro/astro-middleware-examples/blob/master/jwt-auth/src/pages/protected.astro](https://github.com/understanding-astro/astro-middleware-examples/blob/master/jwt-auth/src/pages/protected.astro)
+- [https://dev.to/flashblaze/using-cloudflare-durable-objects-with-sql-storage-d1-and-drizzle-orm-2i3i](https://dev.to/flashblaze/using-cloudflare-durable-objects-with-sql-storage-d1-and-drizzle-orm-2i3i)

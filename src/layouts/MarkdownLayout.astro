@@ -1,0 +1,38 @@
+---
+import type { MarkdownLayoutProps } from "astro";
+import Layout from "@/layouts/Layout.astro";
+
+type Props = MarkdownLayoutProps<{
+    title: string;
+    author: string;
+    published: string;
+}>;
+
+const { frontmatter } = Astro.props;
+---
+
+<Layout title={frontmatter.title}>
+    <div>
+        <h1>{frontmatter.title}</h1>
+        <p>By {frontmatter.author}</p>
+        <slot />
+        <p>Published on {frontmatter.published}</p>
+    </div>
+</Layout>
+
+<style>
+    div {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: center;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 0 auto;
+        height: 98vh;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif,
+            "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    }
+</style>

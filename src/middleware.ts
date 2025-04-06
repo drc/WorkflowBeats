@@ -1,46 +1,38 @@
 import { defineMiddleware } from "astro:middleware";
-import { POST as refresh_token } from "@/pages/api/refresh_token";
+import { drizzle } from "drizzle-orm/d1";
+import { sessions } from "./db/schema";
+import { and, eq, gt } from "drizzle-orm";
 
 // skip middleware for these routes
-const PUBLIC_ROUTES = ["/", "/login", "/api/oauth_redirect", "/api/refresh_token", "/api/spotify/search"];
-
-// TODO: Middleware needs to handle sessions rather than tokens in cookies
-// Maybe use D1 to store sessions in the database. should i sequence the astro middleware, one auth middleware and one session middleware?
+const PUBLIC_ROUTES = [
+	"/",
+	"/login",
+	"/api/oauth_redirect",
+	"/api/refresh_token",
+	"/api/spotify/search",
+];
 
 export const onRequest = defineMiddleware(async (context, next) => {
-    let has_access_token = context.cookies.has("access_token");
-    const has_refresh_token = context.cookies.has("refresh_token");
-    let valid_user_session = has_access_token && has_refresh_token;
-    // console.log({ valid_user_session })
-    // not a public route, so we need to check for access tokens
-    if (!valid_user_session) {
-        if (!PUBLIC_ROUTES.includes(context.url.pathname)) {
-            return context.redirect("/", 302);
-        }
-    }
-    // one of the parts of the session is missing
-    if (!has_access_token && has_refresh_token) {
-        const refresh_response = await refresh_token(context);
-
-        // unable to refresh the access token, redirect to login
-        if (refresh_response.status !== 201) {
-            return context.redirect("/", 302);
-        }
-        has_access_token = context.cookies.has("access_token");
-        valid_user_session = has_access_token && has_refresh_token;
-        
-        if (valid_user_session && context.url.pathname === "/") {
-            return context.redirect("/dashboard", 302);
-        }
-        return next();
-    }
-
-    if (valid_user_session && context.url.pathname === "/") {
-        return context.redirect("/dashboard", 302);
-    }
-    // if we're here, we have an access token
-    context.locals.access_token = context.cookies.get("access_token")?.value ?? "";
-    context.locals.refresh_token = context.cookies.get("refresh_token")?.value ?? "";
-
-    return next();
+	const db = drizzle(context.locals.runtime.env.DB);
+	const has_session = context.cookies.has("session");
+	// if there is a session token, we need to check if it's valid
+	if (!has_session) {
+		return next("/");
+	}
+	const db_session = await db
+		.select()
+		.from(sessions)
+		.where(
+			and(
+				eq(
+					sessions.session_token,
+					//confirmed the cookie is there
+					context.cookies.get("session")?.value as string,
+				),
+				gt(sessions.expires, Date.now()),
+			),
+		);
+	console.log({ db_session });
+	if (db_session.length > 0) return next();
+	return context.redirect("/", 302);
 });

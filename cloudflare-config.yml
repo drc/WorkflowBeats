@@ -1,0 +1,3 @@
+url: http://localhost:4321
+tunnel: dd3d6d80-0cbc-4008-a982-042a2adb9e93
+credentials-file: /Users/dancigrang/.cloudflared/dd3d6d80-0cbc-4008-a982-042a2adb9e93.json

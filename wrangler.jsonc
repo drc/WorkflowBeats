@@ -25,6 +25,14 @@
 			"binding": "workflowbeats",
 			"id": "cc15cf4bb2ce41219aa462fca402dba7"
 		}
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "workflowbeats",
+			"database_id": "8958b3a8-040c-4b7a-a88c-6d98ec6f6cb4",
+			"migrations_dir": "migrations"
+		}
 	]
 	/**
 	 * Smart Placement
