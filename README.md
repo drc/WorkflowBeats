@@ -67,6 +67,35 @@ INSERT INTO "users" ("name") VALUES('Andrew');
 INSERT INTO "users" ("name") VALUES('Dandrew');
 ```
 
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend as Astro Frontend
+    participant Workers as Cloudflare Workers
+    participant OAuth as OAuth Provider
+    participant DB as Database
+    
+    User->>Frontend: Visit website
+    Frontend->>User: Display login button
+    User->>Frontend: Click login button
+    Frontend->>OAuth: Redirect to OAuth provider
+    OAuth->>User: Show login/consent page
+    User->>OAuth: Authenticate & authorize
+    OAuth->>Frontend: Redirect with auth code
+    Frontend->>Workers: Exchange code for tokens
+    Workers->>OAuth: Request tokens
+    OAuth->>Workers: Return access & refresh tokens
+    Workers->>OAuth: Query user information
+    OAuth->>Workers: Return user data
+    
+    Workers->>DB: Store user info (Table 1)
+    Workers->>DB: Store auth & refresh tokens (Table 2)
+    Workers->>DB: Create session (Table 3)
+    
+    Workers->>Frontend: Set session cookie/token
+    Frontend->>User: Redirect to protected page
+```
+
 ## Resources
 
 - [https://docs.astro.build/en/guides/integrations-guide/cloudflare/](https://docs.astro.build/en/guides/integrations-guide/cloudflare/)
