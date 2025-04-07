@@ -11,18 +11,11 @@
     }
 
     // biome-ignore lint/style/useConst: <explanation>
-    let selectedTrack = {};
-
-    const payload = {
-        song_info: {
-            track: "Roots Bloody Roots",
-            artist: "Sepultura",
-            album: "Roots",
-            url: "https://open.spotify.com/track/6ursmCnbc9oDRGa2yHKkoZ",
-        },
-        image_url: "https://i.scdn.co/image/ab67616d0000b2730bd5e7cce9765c2ef519424e",
-        user: "Dan Cigrang",
-    };
+    let selectedTrack = $state({});
+    // biome-ignore lint/style/useConst: <explanation>
+    let selectedValue = $state("");
+    // biome-ignore lint/style/useConst: <explanation>
+    let highlightedItem = $state({});
 
     const sendTheSong = async (event) => {
         const spotify_response = JSON.parse(JSON.stringify(selectedTrack));
@@ -60,17 +53,22 @@
     delay="750"
     localFiltering={false}
     labelFieldName="name"
+    labelFunction={(item) => {
+        return item.name + " - " + item.artists[0].name;
+    }}
     placeholder="Search for a track"
     bind:selectedItem={selectedTrack}
+    bind:highlightedItem={highlightedItem}
+    bind:value={selectedValue}
     autocompleteOffValue="off"
+    minCharactersToSearch={3}
     showClear={true}
-    locked={true}
 >
     {#snippet item(item, label)}
         <img src={item.album.images[2].url} alt="Album cover" />
         <div>
             <div>{@html label}</div>
-            <div>{item.artists[0].name}</div>
+            <!-- <div>{item.artists[0].name}</div> -->
         </div>
     {/snippet}
 </AutoComplete>
