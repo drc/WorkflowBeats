@@ -68,6 +68,7 @@ export const GET: APIRoute = async (context) => {
 			.values({
 				name: user_data.user_display_name,
 				sys_id: user_data.user_sys_id,
+				avatar_url: user_data.user_avatar,
 			})
 			.returning();
 	}

@@ -16,7 +16,7 @@ export const sessions = table(
 	"sessions",
 	{
 		id: t.int().primaryKey({ autoIncrement: true }),
-		user_id: t.int().references(() => users.id),
+		user_id: t.int().references(() => users.id, { onDelete: "cascade" }),
 		session_token: t.text().$default(() => generateUniqueString(16)),
 		expires: t.integer().$default(() => Date.now() + 30 * 60 * 1000),
 	},
@@ -30,7 +30,7 @@ export const connections = table(
 	"connections",
 	{
 		id: t.int().primaryKey({ autoIncrement: true }),
-		user_id: t.int().references(() => users.id),
+		user_id: t.int().references(() => users.id, { onDelete: "cascade" }),
 		access_token: t.text(),
 		refresh_token: t.text(),
 		expires_in: t.integer(),
@@ -47,7 +47,7 @@ export const playlist = table(
 	{
 		id: t.int().primaryKey({ autoIncrement: true }),
 		song_data: t.text(),
-		user: t.int().references(() => users.id),
+		user: t.int().references(() => users.id, { onDelete: "cascade" }),
 	},
 	(table) => [t.uniqueIndex("playlist_name_idx").on(table.song_data)],
 );
