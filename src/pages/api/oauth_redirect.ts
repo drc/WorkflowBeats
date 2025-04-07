@@ -14,7 +14,7 @@ export const GET: APIRoute = async (context) => {
 		return redirect("/?error=Server+Error", 302);
 	}
 
-	cookies.delete("state");
+	cookies.set("state", storedState, { maxAge: 0 });
 
 	const {
 		runtime: { env },
@@ -39,7 +39,6 @@ export const GET: APIRoute = async (context) => {
 		},
 	});
 
-	// TODO: Make a user session saved in database and not store these in cookies
 	const token_data: TokenResponse = await token_response.json();
 	console.log("Retrieved token data");
 	const current_user_response = await fetch(
@@ -90,7 +89,7 @@ export const GET: APIRoute = async (context) => {
 	console.log("Session data saved to database");
 	cookies.set("session", session.session_token as string, {
 		path: "/",
-		maxAge: session.expires as number,
+		expires: new Date(session.expires as number),
 		secure: true,
 		httpOnly: true,
 	});

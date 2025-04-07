@@ -1,0 +1,38 @@
+---
+import { drizzle } from "drizzle-orm/d1";
+import { playlist, users } from "@/db/schema";
+import { desc, eq } from "drizzle-orm";
+import TrackInfo from "./TrackInfo.astro";
+
+interface Props {
+    limit: number;
+}
+
+const { limit = 20 } = Astro.props;
+
+const db = drizzle(Astro.locals.runtime.env.DB, { schema: { users, playlist } });
+const tracks = await db.select().from(playlist).limit(limit).orderBy(desc(playlist.id));
+const track_data = tracks.map((track) => JSON.parse(track.song_data || ""));
+const your_tracks = await db
+    .select()
+    .from(playlist)
+    .where(eq(playlist.user, Astro.locals.user_data.id))
+    .limit(1)
+    .orderBy(desc(playlist.id));
+// const your_track_data = your_tracks.map((track) => JSON.parse(track.song_data || ""));
+const your_track_data = [
+    tracks
+        .filter((track) => track.user === Astro.locals.user_data.id)
+        .map((track) => JSON.parse(track.song_data || ""))[0],
+];
+---
+
+<div class="">
+    <h2>Last Song You Picked</h2>
+    <TrackInfo track_data={your_track_data} />
+</div>
+<hr />
+<div class="">
+    <h2>Last {limit} songs</h2>
+    <TrackInfo {track_data} />
+</div>

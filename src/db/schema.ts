@@ -7,6 +7,7 @@ export const users = table(
 		id: t.int().primaryKey({ autoIncrement: true }),
 		name: t.text(),
 		sys_id: t.text().notNull(),
+		avatar_url: t.text(),
 	},
 	(table) => [t.uniqueIndex("user_sys_id_idx").on(table.sys_id)],
 );
@@ -26,19 +27,29 @@ export const sessions = table(
 );
 
 export const connections = table(
-    "connections",
-    {
-        id: t.int().primaryKey({ autoIncrement: true }),
-        user_id: t.int().references(() => users.id),
-        access_token: t.text(),
-        refresh_token: t.text(),
-        expires_in: t.integer(),
-        provider: t.text(),
-    },
-    (table) => [
-        t.index("conn_user_idx").on(table.user_id),
-        t.index("conn_provider_idx").on(table.provider),
-    ],
+	"connections",
+	{
+		id: t.int().primaryKey({ autoIncrement: true }),
+		user_id: t.int().references(() => users.id),
+		access_token: t.text(),
+		refresh_token: t.text(),
+		expires_in: t.integer(),
+		provider: t.text(),
+	},
+	(table) => [
+		t.index("conn_user_idx").on(table.user_id),
+		t.index("conn_provider_idx").on(table.provider),
+	],
+);
+
+export const playlist = table(
+	"playlist",
+	{
+		id: t.int().primaryKey({ autoIncrement: true }),
+		song_data: t.text(),
+		user: t.int().references(() => users.id),
+	},
+	(table) => [t.uniqueIndex("playlist_name_idx").on(table.song_data)],
 );
 
 function generateUniqueString(length = 12): string {

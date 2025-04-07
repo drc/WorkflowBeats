@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import Image from "astro/components/Image.astro";
 import Search from "@/components/Search.svelte";
+import SongList from "@/components/SongList.astro";
 
 const session = Astro.cookies.get("session")?.value;
 
@@ -25,19 +26,10 @@ if (!user_data) {
 
         <div class="song-search">
             <h2>Search for Songs</h2>
-            <Search client:load />
-            <button id="search-button">Add</button>
+            <Search client:load user={user_data.name} />
         </div>
 
-        <div class="selected-songs">
-            <h2>You Picked</h2>
-            <ul id="song-list"></ul>
-        </div>
-
-        <div class="voting-section">
-            <h2>Vote on Songs</h2>
-            <ul id="voting-list"></ul>
-        </div>
+        <SongList limit={20}/>
     </div>
 </Layout>
 

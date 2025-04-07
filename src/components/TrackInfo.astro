@@ -1,0 +1,54 @@
+---
+import { Image } from "astro:assets";
+interface Props {
+    track_data: {
+        image_url: string;
+        song_info: {
+            track: string;
+            artist: string;
+            album: string;
+        };
+        user: string;
+    }[];
+}
+const { track_data } = Astro.props;
+---
+
+<table>
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Track</th>
+            <th>Artist</th>
+            <th>Album</th>
+            <th>User</th>
+        </tr>
+    </thead>
+    <tbody>
+        {
+            track_data.map((track) => (
+                <tr>
+                    <td>
+                        <Image
+                            src={track.image_url}
+                            alt={track.song_info.track}
+                            width={100}
+                            height={100}
+                            loading="lazy"
+                        />
+                    </td>
+                    <td>{track.song_info.track}</td>
+                    <td>{track.song_info.artist}</td>
+                    <td>{track.song_info.album}</td>
+                    <td>{track.user}</td>
+                </tr>
+            ))
+        }
+    </tbody>
+</table>
+
+<style>
+    table {
+        width: 100%;
+    }
+</style>

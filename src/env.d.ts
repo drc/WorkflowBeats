@@ -8,6 +8,7 @@ declare namespace App {
 			id: number;
 			name: string | null;
 			sys_id: string;
+			avatar_url: string | null;
 		};
 	}
 }
