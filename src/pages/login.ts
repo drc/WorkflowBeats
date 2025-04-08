@@ -3,7 +3,7 @@ import type { APIRoute } from "astro";
 export const GET: APIRoute = async ({ url, locals, cookies }) => {
 	try {
 		const state = crypto.randomUUID();
-		cookies.set("state", state, { path: "/", maxAge: 8640000 });
+		cookies.set("state", state, { path: "/", maxAge: 30 });
 		const { env } = locals.runtime;
 		const login_url = new URL(
 			`https://${env.SERVICENOW_INSTANCE}/oauth_auth.do`,

@@ -9,6 +9,7 @@ interface Props {
             album: string;
         };
         user: string;
+        image_slug: string;
     }[];
 }
 const { track_data } = Astro.props;
@@ -30,7 +31,7 @@ const { track_data } = Astro.props;
                 <tr>
                     <td>
                         <Image
-                            src={track.image_url}
+                            src={`/api/spotify/image/${track.image_slug}`}
                             alt={track.song_info.track}
                             width={100}
                             height={100}

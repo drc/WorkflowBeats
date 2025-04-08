@@ -12,18 +12,14 @@ const { limit = 20 } = Astro.props;
 
 const db = drizzle(Astro.locals.runtime.env.DB, { schema: { users, playlist } });
 const tracks = await db.select().from(playlist).limit(limit).orderBy(desc(playlist.id));
-const track_data = tracks.map((track) => JSON.parse(track.song_data || ""));
-const your_tracks = await db
-    .select()
-    .from(playlist)
-    .where(eq(playlist.user, Astro.locals.user_data.id))
-    .limit(1)
-    .orderBy(desc(playlist.id));
-// const your_track_data = your_tracks.map((track) => JSON.parse(track.song_data || ""));
+const track_data = tracks
+    .map((track) => JSON.parse(track.song_data || ""))
+    .map((track) => ({ ...track, image_slug: new URL(track.image_url).pathname.match(/\w{40}/)?.[0] ?? "" }));
 const your_track_data = [
     tracks
         .filter((track) => track.user === Astro.locals.user_data.id)
-        .map((track) => JSON.parse(track.song_data || ""))[0],
+        .map((track) => JSON.parse(track.song_data || ""))
+        .map((track) => ({ ...track, image_slug: new URL(track.image_url).pathname.match(/\w{40}/)?.[0] ?? "" }))[0],
 ];
 ---
 

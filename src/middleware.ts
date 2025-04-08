@@ -10,13 +10,21 @@ const PUBLIC_ROUTES = [
 	"/login",
 	"/api/oauth_redirect",
 	"/api/refresh_token",
-	"/api/spotify/search",
+	"/api/spotify",
 ];
 
 export const onRequest = defineMiddleware(async (context, next) => {
-	if (PUBLIC_ROUTES.includes(context.url.pathname)) {
+	// todo: make this better, it's skipping the middleware for public routes
+	if (
+		PUBLIC_ROUTES.some(
+			(path) =>
+				path === context.url.pathname ||
+				context.url.pathname.startsWith(`${path}/`),
+		)
+	) {
 		return next();
 	}
+
 	const db = drizzle(context.locals.runtime.env.DB, {
 		schema: { sessions, connections, users },
 	});

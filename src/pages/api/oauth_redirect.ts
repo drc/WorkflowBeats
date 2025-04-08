@@ -14,8 +14,6 @@ export const GET: APIRoute = async (context) => {
 		return redirect("/?error=Server+Error", 302);
 	}
 
-	cookies.set("state", storedState, { maxAge: 0 });
-
 	const {
 		runtime: { env },
 	} = locals;

@@ -58,17 +58,17 @@
     }}
     placeholder="Search for a track"
     bind:selectedItem={selectedTrack}
-    bind:highlightedItem={highlightedItem}
+    bind:highlightedItem
     bind:value={selectedValue}
     autocompleteOffValue="off"
     minCharactersToSearch={3}
     showClear={true}
 >
     {#snippet item(item, label)}
-        <img src={item.album.images[2].url} alt="Album cover" />
+        <img src={`/api/spotify/image/${new URL(item.album.images[2].url).pathname.match(/\w{40}/)?.[0]}`} alt="Album cover" />
         <div>
             <div>{@html label}</div>
-            <!-- <div>{item.artists[0].name}</div> -->
+            <!-- <div>{`/api/spotify/image/${new URL(item.album.images[2].url).pathname.match(/\w{40}/)?.[0]}`}</div> -->
         </div>
     {/snippet}
 </AutoComplete>
