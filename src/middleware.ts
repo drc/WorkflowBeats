@@ -10,7 +10,7 @@ const PUBLIC_ROUTES = [
 	"/login",
 	"/api/oauth_redirect",
 	"/api/refresh_token",
-	"/api/spotify",
+	"/api/spotify/search",
 ];
 
 export const onRequest = defineMiddleware(async (context, next) => {
