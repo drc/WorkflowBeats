@@ -30,6 +30,7 @@
             artist: spotify_response.artists[0].name,
             album: spotify_response.album.name,
             url: spotify_response.external_urls.spotify,
+            uri: spotify_response.uri,
         };
         const image_url = spotify_response.album.images[0].url;
         const payload = {
@@ -65,10 +66,12 @@
     showClear={true}
 >
     {#snippet item(item, label)}
-        <img src={`/api/spotify/image/${new URL(item.album.images[2].url).pathname.match(/\w{40}/)?.[0]}`} alt="Album cover" />
+        <img
+            src={`/api/spotify/image/${new URL(item.album.images[2].url).pathname.match(/\w{40}/)?.[0]}`}
+            alt="Album cover"
+        />
         <div>
             <div>{@html label}</div>
-            <!-- <div>{`/api/spotify/image/${new URL(item.album.images[2].url).pathname.match(/\w{40}/)?.[0]}`}</div> -->
         </div>
     {/snippet}
 </AutoComplete>

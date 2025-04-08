@@ -10,7 +10,6 @@ export const POST: APIRoute = async (context) => {
 		const { request } = context;
 		// get the request body
 		const body = await request.json();
-		console.log({ body });
 		// send to printer
 		const printer_response = await fetch(
 			"https://pryntyr.dancigrang.dev/api/spotify",
