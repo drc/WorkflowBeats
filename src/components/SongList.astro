@@ -1,8 +1,8 @@
 ---
-import { drizzle } from "drizzle-orm/d1";
-import { playlist, users } from "@/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { playlist } from "@/db/schema";
+import { desc } from "drizzle-orm";
 import TrackInfo from "./TrackInfo.astro";
+import db from "@/db";
 
 interface Props {
     limit: number;
@@ -10,8 +10,8 @@ interface Props {
 
 const { limit = 20 } = Astro.props;
 
-const db = drizzle(Astro.locals.runtime.env.DB, { schema: { users, playlist } });
-const tracks = await db.select().from(playlist).limit(limit).orderBy(desc(playlist.id));
+const sqlite = db(Astro.locals.runtime.env.DB);
+const tracks = await sqlite.select().from(playlist).limit(limit).orderBy(desc(playlist.id));
 const track_data = tracks
     .map((track) => JSON.parse(track.song_data || ""))
     .map((track) => ({ ...track, image_slug: new URL(track.image_url).pathname.match(/\w{40}/)?.[0] ?? "" }));

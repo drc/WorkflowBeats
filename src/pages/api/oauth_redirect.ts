@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
-import { drizzle } from "drizzle-orm/d1";
 import { connections, sessions, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import db from "@/db";
 
 export const GET: APIRoute = async (context) => {
 	const { cookies, locals, request, redirect } = context;
@@ -54,14 +54,14 @@ export const GET: APIRoute = async (context) => {
 	const { result: user_data }: UserResponse =
 		await current_user_response.json();
 	console.log("Retrieved user data");
-	const db = drizzle(context.locals.runtime.env.DB);
-	let userDBData = await db
+	const sqlite = db(context.locals.runtime.env.DB);
+	let userDBData = await sqlite
 		.select()
 		.from(users)
 		.where(eq(users.sys_id, user_data.user_sys_id))
 		.limit(1);
 	if (userDBData.length === 0) {
-		userDBData = await db
+		userDBData = await sqlite
 			.insert(users)
 			.values({
 				name: user_data.user_display_name,
@@ -71,7 +71,7 @@ export const GET: APIRoute = async (context) => {
 			.returning();
 	}
 	console.log("User data saved to database");
-	await db.insert(connections).values({
+	await sqlite.insert(connections).values({
 		user_id: userDBData[0]?.id,
 		access_token: token_data.access_token,
 		refresh_token: token_data.refresh_token,
@@ -79,7 +79,7 @@ export const GET: APIRoute = async (context) => {
 		provider: "servicenow",
 	});
 	console.log("Connection data saved to database");
-	const [session] = await db
+	const [session] = await sqlite
 		.insert(sessions)
 		.values({
 			user_id: userDBData[0]?.id ?? 1,

@@ -3,8 +3,10 @@ import type { APIRoute } from "astro";
 const ONE_DAY = 86400; // 1 day in seconds
 
 export const GET: APIRoute = async (context) => {
+	console.log("requesting...");
 	const { locals } = context;
 	const { user_data } = locals;
+	console.log("User data", user_data);
 	if (!user_data) {
 		return new Response("Unauthorized", { status: 401 });
 	}
@@ -49,6 +51,9 @@ export const GET: APIRoute = async (context) => {
 	);
 	return new Response(image_buffer, {
 		status: 200,
-		headers: { "Content-Type": "image/jpeg;charset=utf-8" },
+		headers: {
+			"Content-Type": "image/jpeg;charset=utf-8",
+			"Cache-Control": `private, max-age=${ONE_DAY}, must-revalidate`,
+		},
 	});
 };
