@@ -29,6 +29,6 @@
 		"@types/node": "^22.14.0",
 		"drizzle-kit": "^0.30.6",
 		"simple-svelte-autocomplete": "^2.5.2",
-		"wrangler": "^4.9.1"
+		"wrangler": "^4.59.1"
 	}
 }
