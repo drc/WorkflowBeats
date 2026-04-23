@@ -14,7 +14,7 @@
 		"db:studio": "drizzle-kit studio --config dev.drizzle.config.ts"
 	},
 	"dependencies": {
-		"@astrojs/cloudflare": "^12.4.0",
+		"@astrojs/cloudflare": "^13.1.10",
 		"@astrojs/svelte": "^7.0.9",
 		"astro": "^5.5.6",
 		"dotenv": "^16.4.7",
